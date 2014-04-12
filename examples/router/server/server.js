@@ -28,8 +28,8 @@ Meteor.startup(function () {
   //
     
   if (Meteor.secrets.find().fetch().length === 0) {
-    Meteor.secrets.insert({secret:"ec2 password: apple2"});
-    Meteor.secrets.insert({secret:"domain registration pw: apple3"});
+    Meteor.secrets.insert({secret:"ec2 password: hunter2"});
+    Meteor.secrets.insert({secret:"domain registration pw: hunter2"});
   }
 
 
