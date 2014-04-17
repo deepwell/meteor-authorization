@@ -68,8 +68,11 @@ AuthItems._handlebarsHelpers = {
 
 }
 
-
-if ('undefined' !== typeof Handlebars) {
+if (Package.ui) { // meteor >= 0.8
+  _.each(AuthItems._handlebarsHelpers, function (func, name) {
+    Package.ui.UI.registerHelper(name, func)
+  })
+} else if ('undefined' !== typeof Handlebars) { // meteor < 0.8
   _.each(AuthItems._handlebarsHelpers, function (func, name) {
     Handlebars.registerHelper(name, func)
   })
