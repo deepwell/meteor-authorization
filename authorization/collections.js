@@ -14,7 +14,7 @@
       transform: function(doc) {
         return new AuthItem(doc)
       }
-    })
+    });
   }
 
 }());

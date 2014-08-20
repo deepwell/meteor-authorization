@@ -34,23 +34,23 @@ AuthItems._handlebarsHelpers = {
   isInRole: function (role) {
     var user = Meteor.user(),
       comma = role && role.indexOf(','),
-      roles
+      roles;
 
-    if (!user) return false
+    if (!user) return false;
 
     if (comma !== -1) {
       roles = _.reduce(role.split(','), function (memo, r) {
         if (!r || !r.trim()) {
-          return memo
+          return memo;
         }
-        memo.push(r.trim())
-        return memo
-      }, [])
+        memo.push(r.trim());
+        return memo;
+      }, []);
     } else {
-      roles = [role]
+      roles = [role];
     }
 
-    return AuthManager.userIsInRole(user, roles)
+    return AuthManager.userIsInRole(user, roles);
   },
 
   /**
@@ -61,12 +61,12 @@ AuthItems._handlebarsHelpers = {
    * @return boolean true if current user has access
    */
   checkAccess: function(authItemName) {
-    var user = Meteor.user()
-    if (!user) return false
-    return AuthManager.checkAccess(user, authItemName)
+    var user = Meteor.user();
+    if (!user) return false;
+    return AuthManager.checkAccess(user, authItemName);
   }
 
-}
+};
 
 if (Package.ui) { // meteor >= 0.8
   _.each(AuthItems._handlebarsHelpers, function (func, name) {

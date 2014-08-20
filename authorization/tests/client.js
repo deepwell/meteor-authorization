@@ -15,17 +15,17 @@
     function (test) {
       var isInRole = Roles._handlebarsHelpers.isInRole,
           expected,
-          actual
+          actual;
 
-      test.equal(typeof isInRole, 'function', "'isInRole' helper not registered")
+      test.equal(typeof isInRole, 'function', "'isInRole' helper not registered");
 
-      expected = true
-      actual = isInRole('admin, manage-users')
-      test.equal(actual, expected)
+      expected = true;
+      actual = isInRole('admin, manage-users');
+      test.equal(actual, expected);
 
-      expected = false
-      actual = isInRole('admin')
-      test.equal(actual, expected)
-    })
+      expected = false;
+      actual = isInRole('admin');
+      test.equal(actual, expected);
+    });
 
 }());

@@ -11,9 +11,9 @@
    */
   Meteor.publish(null, function() {
     var userId = this.userId,
-        fields = { authItems:1 }
+        fields = { authItems:1 };
 
-    return Meteor.users.find({ _id: userId }, { fields: fields })
+    return Meteor.users.find({ _id: userId }, { fields: fields });
   })
 
   /**
@@ -21,7 +21,7 @@
    */
   Meteor.publish('authItems', function() {
     // defines the auth items available, does not leak private data
-    return Meteor.authItems.find()
-  })
+    return Meteor.authItems.find();
+  });
 
 }());
