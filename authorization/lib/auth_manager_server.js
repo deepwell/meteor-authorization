@@ -37,19 +37,23 @@
    *
    * @method createPermission
    * @param name string  Permission name
-   * @param type string  AuthItem type
+   * @param description string description of this permission
    * @return AuthItem
    */
-  AuthManager.createPermission = function(name) {
+  AuthManager.createPermission = function(name, description) {
     if (!name
         || 'string' !== typeof name
         || name.trim().length === 0) {
-      return
+      return;
     }
 
     var permission = {
       'name': name.trim(),
       'type': AuthManager.TYPES.PERMISSION
+    }
+
+    if (description && 'string' === typeof description) {
+      permission.description = description.trim();
     }
 
     var id = createItem(permission);

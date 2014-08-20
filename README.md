@@ -8,7 +8,7 @@ Based off of the excellent [meteor-roles](https://github.com/alanning/meteor-rol
 <br />
 ### Contributors
 
-Thanks to [@nickmoylan](https://github.com/nickmoylan) and [@mcrider](https://github.com/mcrider)!
+Thanks to [@maerF0x0](https://github.com/maerF0x0), [@nickmoylan](https://github.com/nickmoylan) and [@mcrider](https://github.com/mcrider)!
 
 <br />
 

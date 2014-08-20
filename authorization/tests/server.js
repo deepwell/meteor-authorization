@@ -85,15 +85,18 @@
     function (test) {
       reset()
 
-      AuthManager.createPermission('test1')
+      var permissionDescription = 'Testing permission';
+      AuthManager.createPermission('test1', permissionDescription)
       var perm1 = Meteor.authItems.findOne()
       test.equal(perm1.name, 'test1')
       test.equal(perm1.type, AuthManager.TYPES.PERMISSION)
+      test.equal(perm1.description, permissionDescription)
 
       AuthManager.createPermission('test2')
       var perm2 = Meteor.authItems.findOne({'name':'test2'})
       test.equal(perm2.name, 'test2')
       test.equal(perm2.type, AuthManager.TYPES.PERMISSION)
+      test.equal(perm2.description, undefined)
 
       test.equal(Meteor.authItems.find().count(), 2)
 
