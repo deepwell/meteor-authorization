@@ -3,7 +3,7 @@
   "description": "Role-based access control and authorization; compatible with Meteor's built-in accounts packages. Supports roles, permissions and nested items. Includes example app and unit tests.",
   "homepage": "https://github.com/deepwell/meteor-authorization",
   "author": "Mark Deepwell <mark@stage3systems.com>",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "git": "https://github.com/deepwell/meteor-authorization.git",
   "packages": {}
 }

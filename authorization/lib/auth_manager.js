@@ -15,7 +15,7 @@ AuthManager = {};
   AuthManager.TYPES = {
     ROLE: 'role',
     PERMISSION: 'permission'
-  }
+  };
 
   var userAuthItemsCache = {};
 
@@ -34,10 +34,10 @@ AuthManager = {};
    */
   AuthManager.checkAccess = function(user, authItemName) {
     if ('string' === typeof user) {
-      user = Meteor.users.findOne({ _id: user }) // convert to user object
+      user = Meteor.users.findOne({ _id: user }); // convert to user object
     }
     if (!user) {
-      return false
+      return false;
     }
 
 
@@ -47,9 +47,9 @@ AuthManager = {};
     }
 
     var userAuthItems = getUserAuthItems(user);
-    var hasAccess = _.contains(userAuthItems, authItemName)
-    //console.log('Does ' + user + ' have access to ' + authItemName, hasAccess)
-    return hasAccess
+    var hasAccess = _.contains(userAuthItems, authItemName);
+
+    return hasAccess;
   }
 
   /**
@@ -84,12 +84,12 @@ AuthManager = {};
    */
   function buildValidAuthItems(rawAuthItems) {
     if (!_.isArray(rawAuthItems) || rawAuthItems.length === 0)
-      return [] // user has no auth items
+      return []; // user has no auth items
 
-    var authItems = [] // array of all possible auth items including nested permissions
+    var authItems = []; // array of all possible auth items including nested permissions
     _.each(rawAuthItems, function(name) {
       authItems.push(name);
-      var authItem = Meteor.authItems.findOne({ name: name })
+      var authItem = Meteor.authItems.findOne({ name: name });
       if (typeof authItem !== 'undefined') {
         if (authItem.type === AuthManager.TYPES.ROLE) {
           // add any items that are nested
@@ -102,7 +102,7 @@ AuthManager = {};
       }
     });
 
-    return authItems
+    return authItems;
   }
 
   /**
@@ -129,20 +129,20 @@ AuthManager = {};
    */
   AuthManager.userIsInRole = function (user, roles) {
     if ('string' === typeof user)
-      user = Meteor.users.findOne({ _id: user }) // convert to user object
+      user = Meteor.users.findOne({ _id: user }); // convert to user object
     if (!user)
-      return false
+      return false;
 
     // ensure array to simplify code
     if (!_.isArray(roles)) {
-      roles = [roles]
+      roles = [roles];
     }
 
-    var userAuthItems = user.authItems
+    var userAuthItems = user.authItems;
     if (_.isArray(userAuthItems)) {
       return _.some(roles, function (role) {
         return _.contains(userAuthItems, role)
-      })
+      });
     }
 
     return false;
@@ -158,20 +158,20 @@ AuthManager = {};
    */
   AuthManager.userHasPermission = function (user, permissions) {
     if ('string' === typeof user)
-      user = Meteor.users.findOne({ _id: user }) // convert to user object
+      user = Meteor.users.findOne({ _id: user }); // convert to user object
     if (!user)
-      return false
+      return false;
 
     // ensure array to simplify code
     if (!_.isArray(permissions)) {
-      permissions = [permissions]
+      permissions = [permissions];
     }
 
-    var userAuthItems = user.authItems
+    var userAuthItems = user.authItems;
     if (_.isArray(userAuthItems)) {
       return _.some(permissions, function (permission) {
-        return _.contains(userAuthItems, permission)
-      })
+        return _.contains(userAuthItems, permission);
+      });
     }
 
     return false;
@@ -188,9 +188,9 @@ AuthManager = {};
     user = Meteor.users.findOne(
       { _id: user},
       { _id: 0, authItems: 1}
-    )
+    );
 
-    return user ? user.authItems : undefined
+    return user ? user.authItems : undefined;
   }
 
   /**
@@ -200,7 +200,7 @@ AuthManager = {};
    * @return {Cursor} cursor of existing roles
    */
   AuthManager.getAllRoles = function () {
-    return Meteor.authItems.find({}, { sort: { name: 1 } })
+    return Meteor.authItems.find({}, { sort: { name: 1 } });
   }
 
   /**
@@ -213,7 +213,7 @@ AuthManager = {};
   AuthManager.getUsersInRole = function (role) {
     return Meteor.users.find(
       { authItems: { $in: [role] } }
-    )
+    );
   }
 
 }());

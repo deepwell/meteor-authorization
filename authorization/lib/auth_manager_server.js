@@ -19,17 +19,17 @@
     if (!name
         || 'string' !== typeof name
         || name.trim().length === 0) {
-      return
+      return;
     }
 
     var role = {
       'name': name.trim(),
       'type': AuthManager.TYPES.ROLE,
       'children': []
-    }
+    };
 
     var id = createItem(role);
-    return Meteor.authItems.findOne({ _id: id })
+    return Meteor.authItems.findOne({ _id: id });
   }
 
   /**
@@ -37,23 +37,27 @@
    *
    * @method createPermission
    * @param name string  Permission name
-   * @param type string  AuthItem type
+   * @param description string description of this permission
    * @return AuthItem
    */
-  AuthManager.createPermission = function(name) {
+  AuthManager.createPermission = function(name, description) {
     if (!name
         || 'string' !== typeof name
         || name.trim().length === 0) {
-      return
+      return;
     }
 
     var permission = {
       'name': name.trim(),
       'type': AuthManager.TYPES.PERMISSION
-    }
+    };
+
+    if (description && 'string' === typeof description) {
+      permission.description = description.trim();
+    };
 
     var id = createItem(permission);
-    return Meteor.authItems.findOne({ _id: id })
+    return Meteor.authItems.findOne({ _id: id });
   }
 
   /**
@@ -65,16 +69,16 @@
    */
   AuthManager.deleteAuthItem = function (name) {
     if (!name)
-      return
+      return;
 
-    var foundExistingUser = Meteor.users.findOne({authItems: {$in: [name]}}, {_id: 1})
+    var foundExistingUser = Meteor.users.findOne({authItems: {$in: [name]}}, {_id: 1});
     if (foundExistingUser) {
-      throw new Meteor.Error(403, 'AuthItem ' + name + 'is in use')
+      throw new Meteor.Error(403, 'AuthItem ' + name + 'is in use');
     }
 
-    var authItem = Meteor.authItems.findOne({ name: name })
+    var authItem = Meteor.authItems.findOne({ name: name });
     if (authItem) {
-      Meteor.authItems.remove({ _id: authItem._id })
+      Meteor.authItems.remove({ _id: authItem._id });
     }
   }
 
@@ -90,14 +94,14 @@
    * @param {Array|String} roles name(s) of roles to add users to
    */
   AuthManager.addUsersToRoles = function (users, roles) {
-    if (!users) throw new Error ("Missing 'users' param")
-    if (!roles) throw new Error ("Missing 'roles' param")
+    if (!users) throw new Error ("Missing 'users' param");
+    if (!roles) throw new Error ("Missing 'roles' param");
 
-    var existingRoles
+    var existingRoles;
 
     // ensure arrays
-    if (!_.isArray(users)) users = [users]
-    if (!_.isArray(roles)) roles = [roles]
+    if (!_.isArray(users)) users = [users];
+    if (!_.isArray(roles)) roles = [roles];
 
     // remove invalid roles
     roles = _.reduce(roles, function (memo, role) {
@@ -106,23 +110,23 @@
           role.trim().length > 0) {
         memo.push(role.trim())
       }
-      return memo
-    }, [])
+      return memo;
+    }, []);
 
     if (roles.length === 0) {
-      return
+      return;
     }
 
     // ensure all roles exist in 'authItems' collection
     existingRoles = _.reduce(Meteor.authItems.find({}).fetch(), function (memo, role) {
-      memo[role.name] = true
-      return memo
-    }, {})
+      memo[role.name] = true;
+      return memo;
+    }, {});
     _.each(roles, function (role) {
       if (!existingRoles[role]) {
-        AuthManager.createRole(role)
+        AuthManager.createRole(role);
       }
-    })
+    });
 
     // update all users, adding to roles set
     if (Meteor.isClient) {
@@ -132,15 +136,15 @@
           {       _id: user },
           { $addToSet: { authItems: { $each: roles } } },
           {     multi: true }
-        )
-      })
+        );
+      });
     } else {
       // On the server we can leverage MongoDB's $in operator for performance
       Meteor.users.update(
         {       _id: { $in: users } },
         { $addToSet: { authItems: { $each: roles } } },
         {     multi: true }
-      )
+      );
     }
   }
 
@@ -152,12 +156,12 @@
    * @param {Array|String} roles name(s) of roles to add users to
    */
   AuthManager.removeUsersFromRoles = function (users, roles) {
-    if (!users) throw new Error ("Missing 'users' param")
-    if (!roles) throw new Error ("Missing 'roles' param")
+    if (!users) throw new Error ("Missing 'users' param");
+    if (!roles) throw new Error ("Missing 'roles' param");
 
     // ensure arrays
-    if (!_.isArray(users)) users = [users]
-    if (!_.isArray(roles)) roles = [roles]
+    if (!_.isArray(users)) users = [users];
+    if (!_.isArray(roles)) roles = [roles];
 
     // update all users, remove from roles set
     if (Meteor.isClient) {
@@ -167,15 +171,15 @@
           {      _id: user },
           { $pullAll: { authItems: roles } },
           {    multi: true}
-        )
-      })
+        );
+      });
     } else {
       // On the server we can leverage MongoDB's $in operator for performance
       Meteor.users.update(
         {      _id: {   $in: users } },
         { $pullAll: { authItems: roles } },
         {    multi: true}
-      )
+      );
     }
   }
 
@@ -189,7 +193,7 @@
     return Meteor.authItems.update(
       {      name: itemName },
       { $addToSet: { children: childName } }
-    )
+    );
   }
 
   /**
@@ -199,17 +203,17 @@
    */
   function createItem(doc) {
     try {
-      return Meteor.authItems.insert(doc)
+      return Meteor.authItems.insert(doc);;;;
     } catch (e) {
       // (from Meteor accounts-base package, insertUserDoc func)
       // XXX string parsing sucks, maybe
       // https://jira.mongodb.org/browse/SERVER-3069 will get fixed one day
-      if (e.name !== 'MongoError') throw e
-      var match = e.err.match(/^E11000 duplicate key error index: ([^ ]+)/)
-      if (!match) throw e
+      if (e.name !== 'MongoError') throw e;
+      var match = e.err.match(/^E11000 duplicate key error index: ([^ ]+)/);
+      if (!match) throw e;
       if (match[1].indexOf('$name') !== -1)
-        throw new Meteor.Error(403, "Cannot add '" + name + "' because AuthItem already exists")
-      throw e
+        throw new Meteor.Error(403, "Cannot add '" + name + "' because AuthItem already exists");
+      throw e;
     }
   }
 
